@@ -28,7 +28,7 @@ class Lesson{
   final List<Question> questions;
 
 
-  Lesson(this.title, this.description,  this.videoURL, {this.docID, this.questions});
+  Lesson({this.title, this.description,  this.videoURL, this.docID, this.questions});
 
   Map<String, dynamic> toJson() =>
       {
@@ -45,7 +45,7 @@ class Lesson{
     String description = parsedJson['description'];
     String videoURL = parsedJson['videoURL'];
 
-    Lesson newLesson = new Lesson(title,description, videoURL);
+    Lesson newLesson = new Lesson(title: title, description: description,videoURL: videoURL);
 
     return newLesson;
 
