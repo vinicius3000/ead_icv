@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -91,6 +92,16 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            YoutubePlayer(
+              context: context,
+              source: "nPt8bK2gbaU",
+              quality: YoutubeQuality.HD,
+              // callbackController is (optional).
+              // use it to control player on your own.
+              callbackController: (controller) {
+                //_videoController = controller;
+              },
+            ),
             Text(
               'You have pushed the button this many times:',
             ),
