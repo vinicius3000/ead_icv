@@ -1,5 +1,3 @@
-
-
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
 import 'package:eadicv/screens/lesson_screen/lesson_screen.dart';
@@ -9,12 +7,10 @@ import 'package:flutter/material.dart';
 
 const mainColor = Colors.black45;
 
+enum OrderOptions { orderaz, orderza }
 
 class StudentScreen extends StatefulWidget {
 
-  //User user;  // = new Event("", _leadUser,_participantList);
-
-  //StudentScreen();
 
   @override
   _StudentScreenState createState() => _StudentScreenState();
@@ -23,17 +19,13 @@ class StudentScreen extends StatefulWidget {
 
 class _StudentScreenState extends State<StudentScreen> {
 
-  //UserHelper userHelper = UserHelper();
-  //final leadUser = new User("John Doe", "jdoe@gmail.com");
-  //User me ;
   static FirebaseUser currentUser;
-  //StudentHelper Student = new StudentHelper();
   final listViewController = ScrollController();
   String userText = "";
-  //TextEditingController userTextController;
   bool isLoading = true;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Lesson myLesson = new Lesson();
+  List<Lesson> myLessons;
 
   @override
   void initState() {
@@ -45,10 +37,34 @@ class _StudentScreenState extends State<StudentScreen> {
     //FIREBASE
     print("test");
     //Firestore.instance.collection("Courses").document("doc").setData({"instructor" : "Calleb"});
-    List<Lesson> myLessons;
 
-    Lesson myLesson = new Lesson(title: "title", description: "description", videoURL: "youtubeURL");
-    Course myCourse = new Course("Title", "Description", "Calleb");
+    myLessons = new List<Lesson> ();
+
+    Lesson myLesson = new Lesson(title: "Aula de Ioga",
+                                description: "description",
+                                videoURL: "aAWYyU8povw");
+
+    Lesson myLesson2 = new Lesson(title: "This is Home",
+        description: "description",
+        videoURL: "W6TSOymYmPU");
+
+    Lesson myLesson3 = new Lesson(title: "CallebSon",
+        description: "description",
+        videoURL: "W6TSOymYmPU");
+
+    //List<Lesson> myLessons = new List<Lesson>;
+    myLessons.add(myLesson);
+    myLessons.add(myLesson2);
+    myLessons.add(myLesson3);
+
+
+    Course myCourse = new Course("Title", "Description", "Calleb",
+                                              docID: "", lessons: myLessons);
+
+    //myCourse.lessons.add(myLesson);
+    //myCourse.lessons.add(myLesson2);
+
+    //List<Lesson> lessons = myCourse.lessons;
 
     myCourse.saveCourse();
 
@@ -58,67 +74,131 @@ class _StudentScreenState extends State<StudentScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(userText),
-          backgroundColor: Colors.black,
-          centerTitle: true,
-        ),
-        floatingActionButton:
-        FloatingActionButton(
-          onPressed: (){
-            print("here");
-            setState(() {
-              userText = "Reloading, please wait...";
-              isLoading = false;
-              //getData();
-              _showLessonPage(context, myLesson);
+      appBar: AppBar(
+        title: Text("Aulas do Curso de Ioga"),
+        backgroundColor: mainColor,
+        centerTitle: true,
+        actions: <Widget>[
+          PopupMenuButton<OrderOptions>(
+              itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+                const PopupMenuItem<OrderOptions>(
+                  child: Text("Eventos mais proximos primeiro"),
+                  value: OrderOptions.orderaz,
+                ),
+                const PopupMenuItem<OrderOptions>(
+                  child: Text("Eventos mais distantes primeiro"),
+                  value: OrderOptions.orderza,
+                ),
+              ],
+              onSelected: (context) {
+                if (context == OrderOptions.orderaz) {
+                  print("Ordenando lista" + context.toString());
+                  setState(() {
+                    //lessons.sort((a, b) => a.dateStart.compareTo(b.dateStart));
+                  });
+                } else {
+                  print("Ordenando lista" + context.toString());
+                  setState(() {
+                    //events.sort((b, a) => a.dateStart.compareTo(b.dateStart));
+                  });
+                }
 
-              //userText = me.name + "\n" + me.email;
-            });
-
-          },
-          child: Icon(Icons.person_outline),
-          backgroundColor: mainColor,
-        ),
-
-        body:
-        SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Form(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Icon(Icons.person_outline, size: 120.0, color: mainColor),
-                  Text(userText,
-                    //controller: userTextController,
-                    style: TextStyle(fontSize: 22.0,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  Divider(),
-                  Container(
-                      width: 44,
-                      height: 44,
-                      alignment: Alignment.centerRight,
-
-                      child: RawMaterialButton(
-                        shape: CircleBorder(),
-                        fillColor: Colors.green,
-                        elevation: 0.0,
-                        child: Icon(Icons.find_in_page,
-                            color: Colors.white, size: 23),
-                        onPressed: () {
-                          setState(() {
-                            userText = "";
-                          });
-                        },
-                      ))
-                ],
+                //Aqui é onde estou chamando o orderList da classe no outro código
+              })
+        ],
+      ),
+      backgroundColor: Colors.white,
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 31),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: FloatingActionButton(
+                backgroundColor: mainColor,
+                heroTag: "leftButton",
+                onPressed: () {
+                  //_showLoginPage(user: me);
+                },
+                child: Icon(Icons.person_outline),
               ),
-            ) )
-
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+                heroTag: "rightButton",
+                onPressed: () {
+                  //User leadUser = me;
+                 // List<Participation> lp = List();
+                 // _showEventPage(event: Event("", leadUser, lp));
+                },
+                child: Icon(Icons.add),
+                backgroundColor: mainColor),
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              child: RefreshIndicator(
+                onRefresh: (){},//_refresh,
+                child: ListView.builder(
+                  //controller: listViewController,
+                    padding: EdgeInsets.all(10.0),
+                    itemCount: myLessons.length,
+                    itemBuilder: (context, index) {
+                      return _eventCard(context, index);
+                    }),
+              ))
+        ],
+      ),
     );
   }
+
+  Widget _eventCard(BuildContext context, int index) {
+    return GestureDetector(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 50.0,
+                height: 80.0,
+                child:
+
+                //TODO image
+                Icon(Icons
+                    .event),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      myLessons[index].title ?? "",
+                      style: TextStyle(
+                          fontSize: 22.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      myLessons[index].title ?? "",
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        _showLessonPage(context, myLessons[index]);
+      },
+    );
+  }
+
 
 
   Future<void> _showLessonPage

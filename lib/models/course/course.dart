@@ -25,7 +25,7 @@ class Course{
   final String description;
   final String instructor;
   final String docID;
-  final List<Lesson> lessons;
+  List<Lesson> lessons = new List<Lesson> ();
 
   Course(this.title, this.description,  this.instructor, {this.docID, this.lessons});
 
