@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player/youtube_player.dart';
+
+import 'models/course/course.dart';
+import 'models/lesson/lesson.dart';
 
 void main() => runApp(MyApp());
 
@@ -47,6 +50,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+
+  @override
+  void initState() {
+    print("test");
+
+    Firestore.instance.collection("Courses").document("doc").setData({"instructor" : "Calleb"});
+    List<Lesson> myLessons;
+
+    Lesson myLesson = new Lesson("Lesson title", "Minha liçao", "youtubil.com/aoisd");
+    Course myCourse = new Course("Title", "Description", "Calleb");
+
+    myCourse.saveCourse();
+
+        //Firestore.instance.collection("test").add();
+  }
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -92,16 +111,6 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            YoutubePlayer(
-              context: context,
-              source: "nPt8bK2gbaU",
-              quality: YoutubeQuality.HD,
-              // callbackController is (optional).
-              // use it to control player on your own.
-              callbackController: (controller) {
-                //_videoController = controller;
-              },
-            ),
             Text(
               'You have pushed the button this many times:',
             ),

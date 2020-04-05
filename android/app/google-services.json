@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "604348458755",
+    "firebase_url": "https://ead-icv.firebaseio.com",
+    "project_id": "ead-icv",
+    "storage_bucket": "ead-icv.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604348458755:android:ee48cee45250c1467eeb36",
+        "android_client_info": {
+          "package_name": "com.eadicv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "604348458755-agb6boi6bfq5tidcaob22qbja4ev42s8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eadicv",
+            "certificate_hash": "f6a22561a9726020d02ac12a8026625f425d3118"
+          }
+        },
+        {
+          "client_id": "604348458755-7cqvcus72da3q5v2gj1906oj86llsqtp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZuiuIE32Zqdst67fcRnMqrQ3aYCh93SI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "604348458755-7cqvcus72da3q5v2gj1906oj86llsqtp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

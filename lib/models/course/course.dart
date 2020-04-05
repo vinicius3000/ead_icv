@@ -55,10 +55,12 @@ class Course{
 
   Future<bool> saveCourse() async{
 
+    print('tentando Salvar!!');
     String newCourse = json.encode(this);
+    print('codifiquei!!');
     //print("Copy from here:" + newCourse);
     Map<String, dynamic> map = jsonDecode(newCourse);
-
+    print (newCourse);
 
       Firestore.instance.collection("Courses").document("newcourse").setData(map)
           .then((_) {
