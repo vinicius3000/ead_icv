@@ -1,16 +1,18 @@
 # eadicv
 
-Private EAD
+Repositório para o projeto de HotSmart da ICV utilizando Flutter
 
-## Getting Started
+## Contribuitors:
 
-This project is a starting point for a Flutter application.
+- Vinicius Andreatta
+- Isis Andreatta
+- Calleb Malinoski
 
-A few resources to get you started if this is your first Flutter project:
+## Objetivo
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Desenvolver um aplicativo mobile que permita a um usuário acessar video aulas dos nossos clientes.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Estrutura
+
+Sem estrutura definida no momento
+
