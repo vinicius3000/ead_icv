@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async' show Future;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
+import 'package:eadicv/models/user/user.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -26,6 +27,7 @@ class Course{
   final String instructor;
   final String docID;
   List<Lesson> lessons = new List<Lesson> ();
+  List<User> users = new List<User> ();
 
   Course(this.title, this.description,  this.instructor, {this.docID, this.lessons});
 

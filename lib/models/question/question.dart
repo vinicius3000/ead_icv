@@ -21,32 +21,27 @@ class _QuestionHomeState extends State<QuestionHome> {
 @JsonSerializable(explicitToJson: true)
 class Question{
 
-  final String title;
-  final String description;
-  final String instructor;
-  final String docID;
-  final List<Lesson> lessons;
+  final String question;
+  final List<String> answers ;
 
-  Question(this.title, this.description,  this.instructor, {this.docID, this.lessons});
+  Question(this.question,  {this.answers});
 
 
 
   Map<String, dynamic> toJson() =>
       {
-        'title': title,
+        'question': question,
         //'videoLink': videoLink,
-        'description': description,
-        'instructor': instructor
+        'answers': answers,
       };
 
 
 
   factory Question.fromJson(Map<String, dynamic> parsedJson){
-    String title = parsedJson['title'];
-    String description = parsedJson['description'];
-    String instructor = parsedJson['instructor'];
+    String question = parsedJson['question'];
+    List<String> answers = parsedJson['answers'];
 
-    Question newQuestion = new Question(title,description, instructor);
+    Question newQuestion = new Question( question, answers: answers);
 
     return newQuestion;
 

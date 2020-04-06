@@ -1,5 +1,6 @@
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
+import 'package:eadicv/models/question/question.dart';
 import 'package:eadicv/screens/lesson_screen/lesson_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,7 +26,11 @@ class _StudentScreenState extends State<StudentScreen> {
   bool isLoading = true;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Lesson myLesson = new Lesson();
+  Question myQuestion = new Question("Qua?");
   List<Lesson> myLessons;
+  List<Question> myQuestions;
+  List<String> myAnswers;
+
 
   @override
   void initState() {
@@ -39,10 +44,20 @@ class _StudentScreenState extends State<StudentScreen> {
     //Firestore.instance.collection("Courses").document("doc").setData({"instructor" : "Calleb"});
 
     myLessons = new List<Lesson> ();
+    myQuestions = new List<Question> ();
+    myAnswers = new List<String> ();
+    myAnswers.add("Certamente!!");
+    myAnswers.add("Nao!!!!!");
+
+    myQuestion = new Question("hi", answers: myAnswers);
+
+    myQuestions.add(myQuestion);
 
     Lesson myLesson = new Lesson(title: "Aula de Ioga",
                                 description: "description",
-                                videoURL: "aAWYyU8povw");
+                                videoURL: "aAWYyU8povw",
+                                questions:  myQuestions);
+
 
     Lesson myLesson2 = new Lesson(title: "This is Home",
         description: "description",
@@ -170,7 +185,7 @@ class _StudentScreenState extends State<StudentScreen> {
 
                 //TODO image
                 Icon(Icons
-                    .event),
+                    .ondemand_video),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),

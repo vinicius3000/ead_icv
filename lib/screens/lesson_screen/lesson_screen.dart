@@ -175,9 +175,22 @@ class _LessonScreenState extends State<LessonScreen> {
             )
         )
       ]
-      )
-            ,
-            Expanded(child: Row(),)
+      ),
+        Expanded(
+          child: SizedBox(
+            height: 200.0,
+            child: ListView.builder(
+              //controller: listViewController,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                padding: EdgeInsets.all(10.0),
+                itemCount: widget.lesson.questions.length,
+                itemBuilder: (context, index) {
+                  return _eventCard(context, index);
+                }),
+          ),
+        ),
+
           ],
         ),
       ),
@@ -185,7 +198,65 @@ class _LessonScreenState extends State<LessonScreen> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+
+
+  Widget _eventCard(BuildContext context, int index) {
+    return GestureDetector(
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 50.0,
+                height: 80.0,
+                child:
+
+                //TODO image
+                Icon(Icons
+                    .ondemand_video),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          widget.lesson.questions[index].question ?? "",
+                          style: TextStyle(
+                              fontSize: 22.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          widget.lesson.questions[index].question ?? "",
+                          style: TextStyle(
+                              fontSize: 22.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+      },
+    );
+  }
+
+
+
 }
