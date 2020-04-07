@@ -47,9 +47,9 @@ class _StudentScreenState extends State<StudentScreen> {
     myQuestions = new List<Question> ();
     myAnswers = new List<String> ();
     myAnswers.add("Certamente!!");
-    myAnswers.add("Nao!!!!!");
+    //myAnswers.add("Nao!!!!!");
 
-    myQuestion = new Question("hi", answers: myAnswers);
+    myQuestion = new Question("Tem que abrir bem as pernas e os bracos?", answers: myAnswers);
 
     myQuestions.add(myQuestion);
 

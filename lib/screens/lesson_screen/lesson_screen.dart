@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
+import 'package:eadicv/models/question/question.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
 
 class LessonScreen extends StatefulWidget {
   LessonScreen({Key key, this.title, this.lesson}) : super(key: key);
@@ -37,18 +38,21 @@ class _LessonScreenState extends State<LessonScreen> {
   bool _muted = false;
   bool _isPlayerReady = false;
 
-
   @override
   void initState() {
-
     //FIREBASE
     print("test");
 
-    Firestore.instance.collection("Courses").document("doc").setData({"instructor" : "Calleb"});
+    Firestore.instance
+        .collection("Courses")
+        .document("doc")
+        .setData({"instructor": "Calleb"});
     List<Lesson> myLessons;
 
-    Lesson myLesson = new Lesson(title :"Lesson title", description: "Minha liçao",
-    videoURL: "youtubil.com/aoisd");
+    Lesson myLesson = new Lesson(
+        title: "Lesson title",
+        description: "Minha liçao",
+        videoURL: "youtubil.com/aoisd");
     Course myCourse = new Course("Title", "Description", "Calleb");
 
     myCourse.saveCourse();
@@ -76,6 +80,7 @@ class _LessonScreenState extends State<LessonScreen> {
 //    _videoMetaData = YoutubeMetaData();
 //    _playerState = PlayerState.unknown;
   }
+
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
       setState(() {
@@ -99,9 +104,6 @@ class _LessonScreenState extends State<LessonScreen> {
     _seekToController.dispose();
     super.dispose();
   }
-
-
-
 
   void _incrementCounter() {
     setState(() {
@@ -128,72 +130,60 @@ class _LessonScreenState extends State<LessonScreen> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-                children: <Widget>[
-                  Text(widget.lesson.title,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center
-                  )
-                ]
-            )
-            ,
-      Row(children: <Widget>[
-        Container(
-            alignment: Alignment.topCenter,
-            child: YoutubePlayer(
-              controller: _controller,
-              showVideoProgressIndicator: true,
-              progressIndicatorColor: Colors.blueAccent,
-              topActions: <Widget>[
-                SizedBox(width: 8.0),
-                Expanded(
-                  child: Text(
-                    _controller.metadata.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                )
-              ],
-              onReady: () {
-                _isPlayerReady = true;
-              },
-              onEnded: (data) {
-                //_controller
-                //    .load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
-              },
-            )
-        )
-      ]
-      ),
-        Expanded(
-          child: SizedBox(
-            height: 200.0,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(children: <Widget>[
+            Text(widget.lesson.title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center)
+          ]),
+          Row(children: <Widget>[
+            Container(
+                alignment: Alignment.topCenter,
+                child: YoutubePlayer(
+                  controller: _controller,
+                  showVideoProgressIndicator: true,
+                  progressIndicatorColor: Colors.blueAccent,
+                  topActions: <Widget>[
+                    SizedBox(width: 8.0),
+                    Expanded(
+                      child: Text(
+                        _controller.metadata.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    )
+                  ],
+                  onReady: () {
+                    _isPlayerReady = true;
+                  },
+                  onEnded: (data) {
+                    //_controller
+                    //    .load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
+                  },
+                ))
+          ]),
+          Flexible(
+            //height: 200.0,
             child: ListView.builder(
-              //controller: listViewController,
+                //controller: listViewController,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 padding: EdgeInsets.all(10.0),
                 itemCount: widget.lesson.questions.length,
                 itemBuilder: (context, index) {
-                  return _eventCard(context, index);
+                  return _questionCard(context, index);
                 }),
           ),
-        ),
-
-          ],
-        ),
+        ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -204,9 +194,9 @@ class _LessonScreenState extends State<LessonScreen> {
     );
   }
 
+  Widget _questionCard(BuildContext context, int index) {
+    int questionIndex = index;
 
-
-  Widget _eventCard(BuildContext context, int index) {
     return GestureDetector(
       child: Card(
         child: Padding(
@@ -218,33 +208,50 @@ class _LessonScreenState extends State<LessonScreen> {
                 height: 80.0,
                 child:
 
-                //TODO image
-                Icon(Icons
-                    .ondemand_video),
+                    //TODO image
+                    Icon(Icons.question_answer),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
                 child: Column(
+
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          widget.lesson.questions[index].question ?? "",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width),
+                      height: 100,
+                      child: Row(
+
+                        children: <Widget>[
+                          Flexible(
+                            child:
+                            Text(
+                              widget.lesson.questions[questionIndex].question ?? "",
+                              softWrap: true,overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                  fontSize: 19.0, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          widget.lesson.questions[index].question ?? "",
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
+                    Row(children: <Widget>[
+                      SizedBox(
+                          width: 200,
+                          //height: 40,
+                          child: ListView.builder(
+                              //controller: listViewController,
+                              //scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.all(10.0),
+                              itemCount:
+                                  widget.lesson.questions[index].answers.length,
+                              itemBuilder: (context, index) {
+                                return _answerCard(context, index,
+                                    widget.lesson.questions[questionIndex]);
+                              })),
+                      //height: 200.0,
+                    ])
                   ],
                 ),
               )
@@ -252,11 +259,37 @@ class _LessonScreenState extends State<LessonScreen> {
           ),
         ),
       ),
-      onTap: () {
-      },
+      onTap: () {},
     );
   }
 
-
-
+  Widget _answerCard(BuildContext context, int index, Question question) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        question.answers[index] ?? "",
+                        style: TextStyle(
+                            fontSize: 13.0, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+    //onTap: () {},
+  }
 }

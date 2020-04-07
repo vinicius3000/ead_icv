@@ -25,10 +25,14 @@ class Lesson{
   final String description;
   final String videoURL;
   final String docID;
-  final List<Question> questions;
+  List<Question> questions;
 
 
-  Lesson({this.title, this.description,  this.videoURL, this.docID, this.questions});
+  Lesson({this.title, this.description,  this.videoURL, this.docID, this.questions}){
+    if(questions == null){
+      this.questions = new List<Question> ();
+    }
+  }
 
   Map<String, dynamic> toJson() =>
       {
