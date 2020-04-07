@@ -218,8 +218,8 @@ class _LessonScreenState extends State<LessonScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(
-                      width: (MediaQuery.of(context).size.width),
-                      height: 100,
+                      width: 300,//(MediaQuery.of(context).size.width),
+                      //height: 160,
                       child: Row(
 
                         children: <Widget>[
