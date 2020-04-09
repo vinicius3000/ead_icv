@@ -5,10 +5,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginHelper {
 
-  static final LoginHelper _instance = LoginHelper.internal();
+  static LoginHelper _instance = LoginHelper.internal();
 
   factory LoginHelper()  {
-
 
     return _instance;
   }

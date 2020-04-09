@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:eadicv/helpers/login_helper.dart';
 import 'package:eadicv/models/course/course.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,7 +8,7 @@ class User {
 
   String name = "";
   String email = "";
-  List<Course> myCourses = List();
+  List<Course> myCourses = List<Course>();
   QuerySnapshot querySnapshotinstructor;
   QuerySnapshot querySnapshotParticipant;
 
@@ -33,15 +34,17 @@ class User {
 
   Future<void> retrieveCourses() async {
 
+    LoginHelper loginHelper = new LoginHelper();
+
     await listCourses();
 
-         this.myCourses.clear();
+         //this.myCourses.clear();
     querySnapshotinstructor.documents.forEach((f){
          Map<String, dynamic> json = f.data;
          //casts, but if you put breaklines through this its that _InternalLinkedHashMap<dynamic, dynamic> type
 
          Course newCourse = new Course.fromJson(f.data);
-        
+
          });
 
          print("Terminei");
@@ -51,8 +54,21 @@ class User {
     querySnapshotParticipant.documents.forEach((f){
       Map<String, dynamic> json = f.data;
       //casts, but if you put breaklines through this its that _InternalLinkedHashMap<dynamic, dynamic> type
-
+      print("Comecei");
       Course newCourseP = new Course.fromJson(f.data);
+
+      print(newCourseP.title);
+      print(newCourseP.lessons.length);
+      print("Comecei2");
+      loginHelper.myUser().myCourses.add(newCourseP);
+
+      LoginHelper.internal().me.myCourses.add(newCourseP);
+      print("Comecei3");
+      print("NewcourseP details1 ${loginHelper.me.myCourses[0].lessons.length}");
+      print("NewcourseP details ${LoginHelper.internal().me.myCourses[0].lessons.length}");
+      print("NewcourseP details ${newCourseP.title}");
+
+      try {
         List<User> ptc = newCourseP.users;
 
         ptc.forEach((pct) {
@@ -67,12 +83,13 @@ class User {
               myCourses.add(newCourseP);
               //print(newCourse.title + ' - ' + newCourse.instructor.email + ' - ${newCourse.userList.length} ');
             }
-
-
-
           }
-
         });
+
+      } catch(e){
+        //print()
+      };
+
 
 
     });

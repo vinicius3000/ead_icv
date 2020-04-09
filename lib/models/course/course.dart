@@ -16,59 +16,68 @@ class _CourseHomeState extends State<CourseHome> {
   Widget build(BuildContext context) {
     return Container();
   }
-
 }
 
 @JsonSerializable(explicitToJson: true)
-class Course{
-
+class Course {
   final String title;
   final String description;
   final String instructor;
   final String docID;
-  List<Lesson> lessons = new List<Lesson> ();
-  List<User> users = new List<User> ();
+  List<Lesson> lessons = new List<Lesson>();
+  List<User> users = new List<User>();
 
-  Course(this.title, this.description,  this.instructor, {this.docID, this.lessons});
+  Course(this.title, this.description, this.instructor,
+      {this.docID, this.lessons, this.users});
 
-
-
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'title': title,
         //'videoLink': videoLink,
         'description': description,
-        'instructor': instructor
+        'instructor': instructor,
+        'lessons': lessons,
+        'users': users
       };
 
+  List<Lesson> getLessons() {
+    return lessons;
+  }
 
-
-  factory Course.fromJson(Map<String, dynamic> parsedJson){
+  factory Course.fromJson(Map<String, dynamic> parsedJson) {
     String title = parsedJson['title'];
     String description = parsedJson['description'];
     String instructor = parsedJson['instructor'];
+    var listLessons = parsedJson['lessons'] as List;
+    var listUsers = parsedJson['users'] as List;
 
-    Course newCourse = new Course(title,description, instructor);
+    List<Lesson> less = new List<Lesson>();
+    less = listLessons.map((i) => Lesson.fromJson(i)).toList();
+
+    List<User> usr = new List<User>();
+    try {
+      usr = listUsers.map((i) => User.fromJson(i)).toList();
+
+    } catch (e) {
+      usr = new List<User>();
+    }
+
+    Course newCourse =
+        new Course(title, description, instructor, lessons: less, users: usr);
 
     return newCourse;
-
   }
 
-
-  Future<bool> saveCourse() async{
-
+  Future<bool> saveCourse() async {
     print('tentando Salvar!!');
     String newCourse = json.encode(this);
     print('codifiquei!!');
     //print("Copy from here:" + newCourse);
     Map<String, dynamic> map = jsonDecode(newCourse);
-    print (newCourse);
+    print(newCourse);
 
-      Firestore.instance.collection("Courses").document("newcourse").setData(map)
-          .then((_) {
-        print('saved existing!!');
-        return (true);
-      });
+    Firestore.instance.collection("Courses").add(map).then((_) {
+      print('saved existing!!');
+      return (true);
+    });
   }
-
 }

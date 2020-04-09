@@ -1,3 +1,4 @@
+import 'package:eadicv/helpers/login_helper.dart';
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
 import 'package:eadicv/models/question/question.dart';
@@ -49,14 +50,14 @@ class _StudentScreenState extends State<StudentScreen> {
   Question myQuestion3 = new Question("Qua?");
   List<Lesson> myLessons;
   List<Question> myQuestions;
-  List<String> myAnswers;
+  List<Answer> myAnswers;
 
 
 
 
 
   @override
-  void initState() {
+  Future<void> initState() {
 
     //super.initState();
 
@@ -73,8 +74,8 @@ class _StudentScreenState extends State<StudentScreen> {
 
     myLessons = new List<Lesson> ();
     myQuestions = new List<Question> ();
-    myAnswers = new List<String> ();
-    myAnswers.add("Certamente!!");
+    myAnswers = new List<Answer> ();
+    myAnswers.add(new Answer("Certamente!!"));
     //myAnswers.add("Nao!!!!!");
 
     myQuestion = new Question("Tem que abrir bem as pernas e os bracos?", answers: myAnswers);
@@ -115,11 +116,30 @@ class _StudentScreenState extends State<StudentScreen> {
 
     //List<Lesson> lessons = myCourse.lessons;
 
-    myCourse.saveCourse();
+    //myCourse.saveCourse();
+
+    listCourses();
+
 
   }
 
+ Future<void> listCourses() async {
+   await LoginHelper.internal().me.listCourses();
+   await LoginHelper.internal().me.retrieveCourses().whenComplete((){
+    print(LoginHelper.internal().me.email);
+    print(LoginHelper.internal().me.myCourses[0].title);
+    print(LoginHelper.internal().me.myCourses[0].lessons.length);
+   });
 
+
+
+setState(){
+
+}
+
+     //print("Updating my video URL ${myLessons[0].videoURL}");
+
+ }
 
   @override
   Widget build(BuildContext context) {

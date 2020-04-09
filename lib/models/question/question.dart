@@ -22,7 +22,7 @@ class _QuestionHomeState extends State<QuestionHome> {
 class Question{
 
   final String question;
-  final List<String> answers ;
+  final List<Answer> answers ;
 
   Question(this.question,  {this.answers});
 
@@ -39,9 +39,15 @@ class Question{
 
   factory Question.fromJson(Map<String, dynamic> parsedJson){
     String question = parsedJson['question'];
-    List<String> answers = parsedJson['answers'];
+    //List<String> answers = parsedJson['answers'];
 
-    Question newQuestion = new Question( question, answers: answers);
+
+//
+    var listAnswers = parsedJson['answers'] as List;
+    List<Answer> ans = listAnswers.map((i) => Answer.fromJson(i)).toList();
+
+
+    Question newQuestion = new Question( question, answers: ans);
 
     return newQuestion;
 
@@ -63,3 +69,41 @@ class Question{
   }
 
 }
+
+
+
+@JsonSerializable(explicitToJson: true)
+class Answer{
+
+  final String answer;
+
+  Answer(this.answer);
+
+
+  Map<String, dynamic> toJson() =>
+      {
+        'answer': answer,
+        //'videoLink': videoLink,
+      };
+
+
+
+  factory Answer.fromJson(Map<String, dynamic> parsedJson){
+    String answer = parsedJson['answer'];
+    //List<String> answers = parsedJson['answers'];
+
+
+//
+//    var listAnswers = parsedJson['answers'] as List;
+//    List<String> ans = listAnswers.map((i) => Question.fromJson(i)).cast<String>().toList();
+
+
+    Answer newAnswer = new Answer( answer);
+
+    return newAnswer;
+
+  }
+
+
+}
+

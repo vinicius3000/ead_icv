@@ -39,7 +39,8 @@ class Lesson{
         'title': title,
         //'videoLink': videoLink,
         'description': description,
-        'videoURL': videoURL
+        'videoURL': videoURL,
+        'questions': questions
       };
 
 
@@ -49,8 +50,14 @@ class Lesson{
     String description = parsedJson['description'];
     String videoURL = parsedJson['videoURL'];
 
-    Lesson newLesson = new Lesson(title: title, description: description,videoURL: videoURL);
+    var listQuestions = parsedJson['questions'] as List;
+    List<Question> qst = listQuestions.map((i) => Question.fromJson(i)).toList();
 
+
+    Lesson newLesson = new Lesson(title: title, description: description,
+                              videoURL: videoURL, questions: qst);
+
+    print("I found this new lesson" + title );
     return newLesson;
 
   }
