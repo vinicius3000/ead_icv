@@ -1,17 +1,20 @@
 import 'dart:ffi';
 
+import 'package:eadicv/helpers/login_helper.dart';
+import 'package:eadicv/screens/student_screen/student_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:eadicv/models/user/user.dart';
 
 const mainColor = Colors.black45;
 
 class LoginScreen extends StatefulWidget {
 
 
-  //User user;  // = new Event("", _leadUser,_participantList);
+  User user;  // = new Event("", _leadUser,_participantList);
 
-  LoginScreen();
+  LoginScreen({this.user});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -22,9 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //UserHelper userHelper = UserHelper();
   //final leadUser = new User("John Doe", "jdoe@gmail.com");
-  //User me ;
+  User me ;
   static FirebaseUser currentUser;
-  //LoginHelper login = new LoginHelper();
+  LoginHelper login = new LoginHelper();
   final listViewController = ScrollController();
   String userText = "";
   //TextEditingController userTextController;
@@ -35,10 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
     //me = new User("John Doe", "jdoe@gmail.com");
-
     //me = widget.user;
     //userText = widget.user.name + "\n" + widget.user.email;
     //me.email = "viniciusandreatta@gmail.com";
+    //me.email = currentUser.email;
+    //me.name = currentUser.displayName;
+
 
   }
 
@@ -66,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     setState(() {
                       userText = "Reloading, please wait...";
 
-                     // getLogoff();
+                      getLogoff();
 
                       //userText = me.name + "\n" + me.email;
                     });
@@ -87,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   setState(() {
                     userText = "Reloading, please wait...";
                     isLoading = false;
-                    //getData();
+                    getData();
 
                     //userText = me.name + "\n" + me.email;
                   });
@@ -126,5 +131,70 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future getLogoff() async {
+    //await new Future.delayed(const Duration(seconds: 5));
+
+    login.logout();
+    //User me = login.myUser();
+
+    //widget.user.name = "John Doe";
+    //widget.user.email = "jdoe@gmail.com";
+
+
+    //userText = widget.user.name + "\n" + widget.user.email;
+    print("NewUserText:" + userText);
+    //build(context);
+
+    setState(() {
+      userText = widget.user.name + "\n" + widget.user.email;
+      print("Widget user name: " + widget.user.name);
+    });
+  }
+
+
+  Future getData() async {
+    //await new Future.delayed(const Duration(seconds: 5));
+
+    await login.getUser();
+    me = login.myUser();
+
+    //widget.user.name = me.name;
+    //widget.user.email = me.email;
+
+
+    userText = me.name + "\n" + me.email;
+    print("NewUserText:" + userText);
+    //build(context);
+
+    setState(() {
+      userText = me.name + "\n" + me.email;
+      //print("Widget user name: " + widget.user.name);
+      isLoading = true;
+      _showStudentPage(context, me);
+      //Navigator.pop(context);
+
+    });
+  }
+
+  Future<void> _showStudentPage
+      (context, User user) async {
+
+    print('Clicado');
+    final recContact = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) =>
+            StudentScreen(user: me, title: "Meus Cursos"))
+    );
+    if (recContact != null) {
+      print('not Null');
+      if (null != null) {
+      } else {
+      }
+    }
+    else{
+      //_refresh();
+      //When comming back to this page
+    }
+
+  }
 
 }

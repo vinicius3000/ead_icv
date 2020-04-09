@@ -5,9 +5,22 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginHelper {
 
+  static final LoginHelper _instance = LoginHelper.internal();
+
+  factory LoginHelper()  {
+
+
+    return _instance;
+  }
+  //=> _instance ;
+
+  LoginHelper.internal();
+
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final User me = new User("","");
   FirebaseUser _currentUser;
+  bool isSignedIn = false;
   //LoginHelper.internal(this._currentUser);
 
   //static final LoginHelper _instance = LoginHelper.internal();
@@ -20,6 +33,7 @@ class LoginHelper {
   User myUser(){
     return me;
   }
+
   Future<FirebaseUser> getUser() async {
 
     if(_currentUser !=null) return _currentUser;
@@ -52,7 +66,21 @@ class LoginHelper {
     }
   }
 
+  bool isLoggedIn()  {
 
+      return isSignedIn;
+    }
+
+
+ Future<bool> isLoggedInFuture() async {
+   if(googleSignIn.isSignedIn() != null){
+     if(await googleSignIn.isSignedIn() == true) {return true;};
+   }
+   else{
+     return false;
+   }
+
+ }
   void logout() async {
 
     if(googleSignIn.isSignedIn() != null){
@@ -75,16 +103,5 @@ class LoginHelper {
     }
   }
 
-
-}
-
-class Login {
-
-  Login();
-
-  @override
-  String toString() {
-    return "Oi!"; //"Login(id: $id, name: $name, email: $email, phone: $phone, img: $img)";
-  }
 
 }
