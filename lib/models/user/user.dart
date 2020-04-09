@@ -32,7 +32,7 @@ class User {
   }
 
   Future<void> retrieveCourses() async {
-    await listCourses();
+    await _dbCourses();
 
     //this.myCourses.clear();
     querySnapshotinstructor.documents.forEach((f) {
@@ -50,8 +50,9 @@ class User {
             //casts, but if you put breaklines through this its that _InternalLinkedHashMap<dynamic, dynamic> type
             print("Comecei");
             Course newCourseP = new Course.fromJson(f.data);
+            newCourseP.docID = f.documentID;
 
-            print(newCourseP.title);
+            print("Tenho DocID: " + newCourseP.docID);
             print(newCourseP.lessons.length);
             print("Comecei2");
 
@@ -89,7 +90,7 @@ class User {
 
   }
 
-  Future<bool> listCourses() async {
+  Future<bool> _dbCourses() async {
     /*querySnapshotinstructor = await
     //Firestore.instance.collection('Courses').where('title', isEqualTo: 'Meu Courseo').getDocuments();
     Firestore.instance.collection('Courses').getDocuments();

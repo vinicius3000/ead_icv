@@ -22,15 +22,6 @@ class StudentScreen extends StatefulWidget {
 
   StudentScreen({Key key, this.title, this.user}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
   final User user;
 
@@ -53,9 +44,6 @@ class _StudentScreenState extends State<StudentScreen> {
   List<Lesson> myLessons;
   List<Question> myQuestions;
   List<Answer> myAnswers;
-
-
-
 
 
   @override
@@ -121,12 +109,7 @@ class _StudentScreenState extends State<StudentScreen> {
     print("I AM HERE!!! ");
 
     print("I have this many courses: ${loginHelper.me.myCourses.length}");
-    //LoginHelper loginHelper1 = new LoginHelper();
-    //LoginHelper loginHelper2 = new LoginHelper();
 
-   //loginHelper1.me = new User ("v2", "vi2@");
-   //print(loginHelper2.me.email);
-   //print(loginHelper1.me.email);
 
   }
 
@@ -193,6 +176,9 @@ class _StudentScreenState extends State<StudentScreen> {
                   //User leadUser = me;
                  // List<Participation> lp = List();
                  // _showEventPage(event: Event("", leadUser, lp));
+                  Lesson lesson = new Lesson();
+                  _showLessonPage(context, lesson,
+                      loginHelper.me.myCourses[0], isNew: true);
                 },
                 child: Icon(Icons.add),
                 backgroundColor: mainColor),
@@ -203,13 +189,13 @@ class _StudentScreenState extends State<StudentScreen> {
         children: <Widget>[
           Expanded(
               child: RefreshIndicator(
-                onRefresh: (){},//_refresh,
+                onRefresh: _refresh,
                 child: ListView.builder(
                   //controller: listViewController,
                     padding: EdgeInsets.all(10.0),
                     itemCount: myLessons.length,
                     itemBuilder: (context, index) {
-                      return _eventCard(context, index);
+                      return _lessonCard(context, index);
                     }),
               ))
         ],
@@ -217,7 +203,7 @@ class _StudentScreenState extends State<StudentScreen> {
     );
   }
 
-  Widget _eventCard(BuildContext context, int index) {
+  Widget _lessonCard(BuildContext context, int index) {
     return GestureDetector(
       child: Card(
         child: Padding(
@@ -255,7 +241,7 @@ class _StudentScreenState extends State<StudentScreen> {
         ),
       ),
       onTap: () {
-        _showLessonPage(context, myLessons[index]);
+        _showLessonPage(context, myLessons[index], loginHelper.me.myCourses[0] );
       },
     );
   }
@@ -263,12 +249,13 @@ class _StudentScreenState extends State<StudentScreen> {
 
 
   Future<void> _showLessonPage
-      (context, Lesson lesson) async {
+      (context, Lesson lesson, Course course, {bool isNew = false}) async {
 
     print('Clicado');
     final recContact = await Navigator.push(context,
         MaterialPageRoute(builder: (context) =>
-            LessonScreen(lesson: lesson, title: "Liçao de casa"))
+            LessonScreen(lesson: lesson, title: "Liçao de casa",
+                course: course, isThisNew: isNew))
     );
     if (recContact != null) {
       print('not Null');
@@ -306,6 +293,13 @@ class _StudentScreenState extends State<StudentScreen> {
 
   }
 
+  Future<void> _refresh () async {
+    await loginHelper.me.retrieveCourses();
 
+    setState(() {
+      myLessons = loginHelper.me.myCourses[0].lessons;
+    });
+
+  }
 
 }

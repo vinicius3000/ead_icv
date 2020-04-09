@@ -2,15 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
 import 'package:eadicv/models/question/question.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+bool isInstructor = true;
+bool isNew = false;
+
 
 class LessonScreen extends StatefulWidget {
-  LessonScreen({Key key, this.title, this.lesson}) : super(key: key);
+  LessonScreen({Key key, this.title, this.lesson, this.course,
+                                this.isThisNew = false}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
+  // t has a State object (defined below) that contains fields that affect
   // how it looks.
 
   // This class is the configuration for the state. It holds the values (in this
@@ -20,6 +25,9 @@ class LessonScreen extends StatefulWidget {
 
   final String title;
   final Lesson lesson;
+  final Course course;
+  final bool isThisNew;// = false;
+
 
   @override
   _LessonScreenState createState() => _LessonScreenState();
@@ -32,6 +40,10 @@ class _LessonScreenState extends State<LessonScreen> {
   TextEditingController _idController;
   TextEditingController _seekToController;
 
+  TextEditingController _titleController = new TextEditingController() ;
+  TextEditingController _descriptionController ;
+  TextEditingController _videoURLController ;
+
   PlayerState _playerState;
   YoutubeMetaData _videoMetaData;
   double _volume = 100;
@@ -43,40 +55,46 @@ class _LessonScreenState extends State<LessonScreen> {
     //FIREBASE
     print("test");
 
-    Firestore.instance
-        .collection("Courses")
-        .document("doc")
-        .setData({"instructor": "Calleb"});
-    List<Lesson> myLessons;
-
     Lesson myLesson = new Lesson(
         title: "Lesson title",
         description: "Minha liçao",
         videoURL: "youtubil.com/aoisd");
     Course myCourse = new Course("Title", "Description", "Calleb");
-
-    myCourse.saveCourse();
+    isNew = widget.isThisNew;
+    _titleController.text = widget.lesson.title;
+    //_videoURLController.text = widget.lesson.videoURL;
+    //_descriptionController.text = widget.lesson.description;
+    //myCourse.saveCourse();
 
     //Firestore.instance.collection("test").add();
 
     //YOUTUBE
     super.initState();
-    _controller = YoutubePlayerController(
-      //initialVideoId: _ids.first,
-      initialVideoId: widget.lesson.videoURL,
-      flags: YoutubePlayerFlags(
-        mute: false,
-        autoPlay: true,
-        disableDragSeek: false,
-        loop: false,
-        isLive: false,
-        forceHideAnnotation: true,
-        forceHD: false,
-        enableCaption: true,
-      ),
-    )..addListener(listener);
-    _idController = TextEditingController();
-    _seekToController = TextEditingController();
+
+    //String videoURL = 'dQw4w9WgXcQ';
+    if(isNew){
+      widget.lesson.videoURL = 'dQw4w9WgXcQ';
+    }
+    else{
+
+      _controller = YoutubePlayerController(
+        //initialVideoId: _ids.first,
+        initialVideoId: widget.lesson.videoURL,
+        flags: YoutubePlayerFlags(
+          mute: false,
+          autoPlay: true,
+          disableDragSeek: false,
+          loop: false,
+          isLive: false,
+          forceHideAnnotation: true,
+          forceHD: false,
+          enableCaption: true,
+        ),
+      )..addListener(listener);
+      _idController = TextEditingController();
+      _seekToController = TextEditingController();
+    }
+
 //    _videoMetaData = YoutubeMetaData();
 //    _playerState = PlayerState.unknown;
   }
@@ -93,28 +111,55 @@ class _LessonScreenState extends State<LessonScreen> {
   @override
   void deactivate() {
     // Pauses video while navigating to next page.
-    _controller.pause();
+    if(!isNew){
+      _controller.pause();
+
+    }
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+
+    if(!isNew)
+    {
+      _controller.dispose();
     _idController.dispose();
     _seekToController.dispose();
+
+    }
     super.dispose();
+
   }
 
-  void _incrementCounter() {
+  void _saveLesson() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+
+      //widget.lesson.videoURL = _videoURLController.text;
+      widget.lesson.title = _titleController.text;
+
+      if(isNew){
+        widget.course.lessons.add(widget.lesson);
+      }
+
+      widget.course.saveCourse();
+      print("salvei!!");
+      Navigator.pop(context);
+
     });
   }
+
+
+  void _addQuestion() {
+    setState(() {
+
+      widget.lesson.videoURL = _videoURLController.text;
+      widget.lesson.title = _videoURLController.text;
+      widget.course.saveCourse;
+
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -135,14 +180,63 @@ class _LessonScreenState extends State<LessonScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Row(children: <Widget>[
-            Text(widget.lesson.title,
+            (isInstructor == false) ?
+            (Text(widget.lesson.title,
                 style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center)
+                textAlign: TextAlign.center))
+            :
+            (                        Container(
+              width: 250,
+              child: TextField(
+                //expands: true,
+                // expands: true,
+                keyboardType: TextInputType.multiline,
+                maxLines: 1,
+                controller: _titleController,
+                onChanged: (text) {
+                  setState(() {
+                    //saveColor = mainColor;
+                  });
+                },
+                decoration: InputDecoration(
+                    labelText: "Titulo da Aula",
+                    labelStyle:
+                    TextStyle(color: Colors.black, fontSize: 20)),
+              ),
+            ))
+
+          ]),
+
+          Row(children: <Widget>[
+            (isInstructor == false) ?
+            (Divider())
+                :
+            (Container(
+              width: 250,
+              child: TextField(
+                //expands: true,
+                // expands: true,
+                keyboardType: TextInputType.multiline,
+                maxLines: 1,
+                controller: _videoURLController,
+                onChanged: (text) {
+                  setState(() {
+                    //saveColor = mainColor;
+                  });
+                },
+                decoration: InputDecoration(
+                    labelText: "Youtube URL",
+                    labelStyle:
+                    TextStyle(color: Colors.black, fontSize: 20)),
+              ),
+            ))
+
           ]),
           Row(children: <Widget>[
             Container(
                 alignment: Alignment.topCenter,
-                child: YoutubePlayer(
+                child:
+                isNew ? (Divider()) : (YoutubePlayer(
                   controller: _controller,
                   showVideoProgressIndicator: true,
                   progressIndicatorColor: Colors.blueAccent,
@@ -167,7 +261,10 @@ class _LessonScreenState extends State<LessonScreen> {
                     //_controller
                     //    .load(_ids[(_ids.indexOf(data.videoId) + 1) % _ids.length]);
                   },
-                ))
+                )
+                ),
+
+                )
           ]),
           Flexible(
             //height: 200.0,
@@ -184,11 +281,16 @@ class _LessonScreenState extends State<LessonScreen> {
         ],
       ),
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+      floatingActionButton:
+      (isInstructor == false) ? (FloatingActionButton(
+        onPressed: _addQuestion,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+        child: Icon(Icons.add_comment),
+      )) : (FloatingActionButton(
+        onPressed: _saveLesson,
+        tooltip: 'Increment',
+        child: Icon(Icons.save),
+      ))
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -277,7 +379,7 @@ class _LessonScreenState extends State<LessonScreen> {
                   Row(
                     children: <Widget>[
                       Text(
-                        question.answers[index] ?? "",
+                        question.answers[index].answer ?? "",
                         style: TextStyle(
                             fontSize: 13.0, fontWeight: FontWeight.bold),
                       ),

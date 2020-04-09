@@ -20,10 +20,10 @@ class _CourseHomeState extends State<CourseHome> {
 
 @JsonSerializable(explicitToJson: true)
 class Course {
-  final String title;
-  final String description;
-  final String instructor;
-  final String docID;
+  String title;
+  String description;
+  String instructor;
+  String docID;
   List<Lesson> lessons = new List<Lesson>();
   List<User> users = new List<User>();
 
@@ -36,7 +36,8 @@ class Course {
         'description': description,
         'instructor': instructor,
         'lessons': lessons,
-        'users': users
+        'users': users,
+        'docID' : docID
       };
 
   List<Lesson> getLessons() {
@@ -47,6 +48,7 @@ class Course {
     String title = parsedJson['title'];
     String description = parsedJson['description'];
     String instructor = parsedJson['instructor'];
+    String docID = parsedJson['docID'];
     var listLessons = parsedJson['lessons'] as List;
     var listUsers = parsedJson['users'] as List;
 
@@ -72,22 +74,39 @@ class Course {
 
     print("Creating new course");
     Course newCourse =
-        new Course(title, description, instructor, lessons: less, users: usr);
+        new Course(title, description, instructor, lessons: less, users: usr, docID: docID);
 
     return newCourse;
   }
 
   Future<bool> saveCourse() async {
-    print('tentando Salvar!!');
-    String newCourse = json.encode(this);
-    print('codifiquei!!');
-    //print("Copy from here:" + newCourse);
-    Map<String, dynamic> map = jsonDecode(newCourse);
-    print(newCourse);
 
-    Firestore.instance.collection("Courses").add(map).then((_) {
-      print('saved existing!!');
-      return (true);
-    });
+    if (docID == null){
+      print('tentando Salvar novo!!');
+      String newCourse = json.encode(this);
+      print('codifiquei!!');
+      //print("Copy from here:" + newCourse);
+      Map<String, dynamic> map = jsonDecode(newCourse);
+      print(newCourse);
+
+      Firestore.instance.collection("Courses").add(map).then((_) {
+        print('saved existing!!');
+        return (true);
+      });
+    }
+    else {
+      print('tentando Salvar existente!!');
+      String newCourse = json.encode(this);
+      print('codifiquei!!');
+      //print("Copy from here:" + newCourse);
+      Map<String, dynamic> map = jsonDecode(newCourse);
+      print(newCourse);
+
+      Firestore.instance.collection("Courses").document(docID).setData(map).then((_) {
+        print('saved existing!!');
+        return (true);
+      });
+    }
+
   }
 }

@@ -9,9 +9,7 @@ const mainColor = Colors.black45;
 
 class LoginScreen extends StatefulWidget {
 
-
   User user;
-
   LoginScreen({this.user});
 
   @override
@@ -160,8 +158,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       print("retrieved list of courses for " + loginHelper.me.email);
     });
-
-
   }
 
   Future<void> _showStudentPage

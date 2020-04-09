@@ -21,10 +21,10 @@ class _LessonHomeState extends State<LessonHome> {
 @JsonSerializable(explicitToJson: true)
 class Lesson{
 
-  final String title;
-  final String description;
-  final String videoURL;
-  final String docID;
+  String title;
+  String description;
+  String videoURL;
+  String docID;
   List<Question> questions;
 
 
