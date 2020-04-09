@@ -16,6 +16,8 @@ enum OrderOptions { orderaz, orderza }
 
 final User user = new User("", "");
 
+LoginHelper loginHelper = new LoginHelper();
+
 class StudentScreen extends StatefulWidget {
 
   StudentScreen({Key key, this.title, this.user}) : super(key: key);
@@ -88,17 +90,17 @@ class _StudentScreenState extends State<StudentScreen> {
     myQuestions.add(myQuestion3);
 
 
-    Lesson myLesson = new Lesson(title: "Aula de Ioga",
+    Lesson myLesson = new Lesson(title: "2Aula de Ioga",
                                 description: "description",
                                 videoURL: "aAWYyU8povw",
                                 questions:  myQuestions);
 
 
-    Lesson myLesson2 = new Lesson(title: "This is Home",
+    Lesson myLesson2 = new Lesson(title: "2This is Home",
         description: "description",
         videoURL: "W6TSOymYmPU");
 
-    Lesson myLesson3 = new Lesson(title: "CallebSon",
+    Lesson myLesson3 = new Lesson(title: "2CallebSon",
         description: "description",
         videoURL: "W6TSOymYmPU");
 
@@ -110,36 +112,24 @@ class _StudentScreenState extends State<StudentScreen> {
 
     Course myCourse = new Course("Title", "Description", "Calleb",
                                               docID: "", lessons: myLessons);
-
-    //myCourse.lessons.add(myLesson);
-    //myCourse.lessons.add(myLesson2);
-
-    //List<Lesson> lessons = myCourse.lessons;
-
     //myCourse.saveCourse();
 
-    listCourses();
+    //loginHelper.getUser(); //= new User ("v1", "vi@");
+    //listCourses();
+    print("I AM HERE!!! ");
+    myLessons = loginHelper.me.myCourses[0].lessons;//widget.user.myCourses[0].lessons;
+    print("I AM HERE!!! ");
 
+    print("I have this many courses: ${loginHelper.me.myCourses.length}");
+    //LoginHelper loginHelper1 = new LoginHelper();
+    //LoginHelper loginHelper2 = new LoginHelper();
+
+   //loginHelper1.me = new User ("v2", "vi2@");
+   //print(loginHelper2.me.email);
+   //print(loginHelper1.me.email);
 
   }
 
- Future<void> listCourses() async {
-   await LoginHelper.internal().me.listCourses();
-   await LoginHelper.internal().me.retrieveCourses().whenComplete((){
-    print(LoginHelper.internal().me.email);
-    print(LoginHelper.internal().me.myCourses[0].title);
-    print(LoginHelper.internal().me.myCourses[0].lessons.length);
-   });
-
-
-
-setState(){
-
-}
-
-     //print("Updating my video URL ${myLessons[0].videoURL}");
-
- }
 
   @override
   Widget build(BuildContext context) {
@@ -288,7 +278,8 @@ setState(){
     }
     else{
       //_refresh();
-      //When comming back to this page
+      //When co
+      // mming back to this page
     }
 
   }

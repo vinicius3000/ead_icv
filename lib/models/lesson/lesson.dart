@@ -50,9 +50,12 @@ class Lesson{
     String description = parsedJson['description'];
     String videoURL = parsedJson['videoURL'];
 
+    print("parsing questions list");
     var listQuestions = parsedJson['questions'] as List;
     List<Question> qst = listQuestions.map((i) => Question.fromJson(i)).toList();
 
+
+    print("creating new lesson");
 
     Lesson newLesson = new Lesson(title: title, description: description,
                               videoURL: videoURL, questions: qst);

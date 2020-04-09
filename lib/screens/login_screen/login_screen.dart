@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:eadicv/helpers/login_helper.dart';
 import 'package:eadicv/screens/student_screen/student_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +10,7 @@ const mainColor = Colors.black45;
 class LoginScreen extends StatefulWidget {
 
 
-  User user;  // = new Event("", _leadUser,_participantList);
+  User user;
 
   LoginScreen({this.user});
 
@@ -23,27 +21,17 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  //UserHelper userHelper = UserHelper();
-  //final leadUser = new User("John Doe", "jdoe@gmail.com");
   User me ;
   static FirebaseUser currentUser;
-  LoginHelper login = new LoginHelper();
+  LoginHelper loginHelper = new LoginHelper();
   final listViewController = ScrollController();
   String userText = "";
-  //TextEditingController userTextController;
   bool isLoading = true;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     WidgetsFlutterBinding.ensureInitialized();
-    //me = new User("John Doe", "jdoe@gmail.com");
-    //me = widget.user;
-    //userText = widget.user.name + "\n" + widget.user.email;
-    //me.email = "viniciusandreatta@gmail.com";
-    //me.email = currentUser.email;
-    //me.name = currentUser.displayName;
-
 
   }
 
@@ -73,11 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       getLogoff();
 
-                      //userText = me.name + "\n" + me.email;
                     });
-                    //_showLoginPage(user: me);
-                    //print("new user email!!!!!!!!!!!!!"+ me.email);
-                    //me = user;
 
                   },
                   child: Icon(Icons.exit_to_app),),
@@ -134,16 +118,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Future getLogoff() async {
     //await new Future.delayed(const Duration(seconds: 5));
 
-    login.logout();
-    //User me = login.myUser();
+    loginHelper.logout();
 
-    //widget.user.name = "John Doe";
-    //widget.user.email = "jdoe@gmail.com";
-
-
-    //userText = widget.user.name + "\n" + widget.user.email;
     print("NewUserText:" + userText);
-    //build(context);
 
     setState(() {
       userText = widget.user.name + "\n" + widget.user.email;
@@ -155,16 +132,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Future getData() async {
     //await new Future.delayed(const Duration(seconds: 5));
 
-    await login.getUser();
-    me = login.myUser();
-
-    //widget.user.name = me.name;
-    //widget.user.email = me.email;
-
+    await loginHelper.getUser();
+    me = loginHelper.myUser();
 
     userText = me.name + "\n" + me.email;
     print("NewUserText:" + userText);
-    //build(context);
+
+    await getUserCourses();
 
     setState(() {
       userText = me.name + "\n" + me.email;
@@ -172,8 +146,22 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
       _showStudentPage(context, me);
       //Navigator.pop(context);
-
     });
+
+
+  }
+
+
+  Future<void> getUserCourses() async {
+
+    print("retrieving list of courses for " + loginHelper.me.email);
+    await loginHelper.me.retrieveCourses().whenComplete((){
+      print(loginHelper.me.email);
+
+      print("retrieved list of courses for " + loginHelper.me.email);
+    });
+
+
   }
 
   Future<void> _showStudentPage
@@ -191,8 +179,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
     else{
-      //_refresh();
-      //When comming back to this page
     }
 
   }

@@ -50,17 +50,27 @@ class Course {
     var listLessons = parsedJson['lessons'] as List;
     var listUsers = parsedJson['users'] as List;
 
-    List<Lesson> less = new List<Lesson>();
-    less = listLessons.map((i) => Lesson.fromJson(i)).toList();
 
+
+    print("Mapping Lessons");
+    List<Lesson> less = listLessons.map((i) => Lesson.fromJson(i)).toList();
+
+
+    print("Mapping Users");
     List<User> usr = new List<User>();
     try {
+
+      print("Mapping Users Try");
       usr = listUsers.map((i) => User.fromJson(i)).toList();
 
     } catch (e) {
+
+      print("Mapping Users CATCH");
       usr = new List<User>();
     }
 
+
+    print("Creating new course");
     Course newCourse =
         new Course(title, description, instructor, lessons: less, users: usr);
 
