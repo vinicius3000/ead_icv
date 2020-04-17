@@ -22,7 +22,7 @@ class _CourseHomeState extends State<CourseHome> {
 class Course {
   String title;
   String description;
-  User instructor;
+  String instructor;
   String docID;
   List<Lesson> lessons = new List<Lesson>();
   List<User> users = new List<User>();
@@ -32,6 +32,7 @@ class Course {
 
   Map<String, dynamic> toJson() => {
         'title': title,
+        //'videoLink': videoLink,
         'description': description,
         'instructor': instructor,
         'lessons': lessons,
@@ -46,42 +47,37 @@ class Course {
   factory Course.fromJson(Map<String, dynamic> parsedJson) {
     String title = parsedJson['title'];
     String description = parsedJson['description'];
+    String instructor = parsedJson['instructor'];
     String docID = parsedJson['docID'];
     var listLessons = parsedJson['lessons'] as List;
     var listUsers = parsedJson['users'] as List;
-    User instructor = new User("","");
 
-    try {instructor = User.fromJson(parsedJson['instructor']);}
-    catch (e){
-      print("Nao consegui converter do banco para instrutor");
+
+
+    print("Mapping Lessons");
+    List<Lesson> less = listLessons.map((i) => Lesson.fromJson(i)).toList();
+
+
+    print("Mapping Users");
+    List<User> usr = new List<User>();
+    try {
+
+      print("Mapping Users Try");
+      usr = listUsers.map((i) => User.fromJson(i)).toList();
+
+    } catch (e) {
+
+      print("Mapping Users CATCH");
+      usr = new List<User>();
     }
 
 
-      print("Mapping Lessons");
-      List<Lesson> less = listLessons.map((i) => Lesson.fromJson(i)).toList();
+    print("Creating new course");
+    Course newCourse =
+        new Course(title, description, instructor, lessons: less, users: usr, docID: docID);
 
-
-      print("Mapping Users");
-      List<User> usr = new List<User>();
-      try {
-
-        print("Mapping Users Try");
-        usr = listUsers.map((i) => User.fromJson(i)).toList();
-
-      } catch (e) {
-
-        print("Mapping Users CATCH");
-        usr = new List<User>();
-      }
-
-
-      print("Creating new course");
-      Course newCourse =
-      new Course(title, description, instructor, lessons: less, users: usr, docID: docID);
-
-      return newCourse;
-    }
-
+    return newCourse;
+  }
 
   Future<bool> saveCourse() async {
 

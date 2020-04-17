@@ -98,7 +98,7 @@ class _StudentScreenState extends State<StudentScreen> {
     myLessons.add(myLesson3);
 
 
-    Course myCourse = new Course("Title", "Description", loginHelper.me,
+    Course myCourse = new Course("Title", "Description", "Calleb",
                                               docID: "", lessons: myLessons);
     //myCourse.saveCourse();
 
