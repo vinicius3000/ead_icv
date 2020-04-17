@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eadicv/models/course/course.dart';
 import 'package:eadicv/models/lesson/lesson.dart';
 import 'package:eadicv/models/question/question.dart';
+import 'package:eadicv/models/user/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -59,7 +60,7 @@ class _LessonScreenState extends State<LessonScreen> {
         title: "Lesson title",
         description: "Minha liçao",
         videoURL: "youtubil.com/aoisd");
-    Course myCourse = new Course("Title", "Description", "Calleb");
+    Course myCourse = new Course("Title", "Description", loginHelper.me);
     isNew = widget.isThisNew;
     _titleController.text = widget.lesson.title;
     //_videoURLController.text = widget.lesson.videoURL;
