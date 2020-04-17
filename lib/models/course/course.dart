@@ -51,6 +51,9 @@ class Course {
     var listUsers = parsedJson['users'] as List;
     User instructor = new User("","");
 
+
+    print("Erro aqui?");
+
     try {instructor = User.fromJson(parsedJson['instructor']);}
     catch (e){
       print("Nao consegui converter do banco para instrutor");
